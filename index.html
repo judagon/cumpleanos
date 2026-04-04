@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DEJAME UN MENSAJE DE CUMPLEAÑOS " principalmente criticas constructivas "</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f5f2ee;
+      --ink: #1a1814;
+      --muted: #8a8580;
+      --accent: #2d5a3d;
+      --border: #d8d4ce;
+      --card: #ffffff;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .wrapper {
+      width: 100%;
+      max-width: 480px;
+      animation: fadeUp 0.6s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .icon {
+      font-size: 2rem;
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2rem;
+      line-height: 1.15;
+      margin-bottom: 8px;
+      color: var(--ink);
+    }
+
+    .subtitle {
+      font-size: 0.95rem;
+      color: var(--muted);
+      font-weight: 300;
+      margin-bottom: 36px;
+      line-height: 1.5;
+    }
+
+    label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 180px;
+      padding: 16px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 300;
+      line-height: 1.6;
+      color: var(--ink);
+      background: var(--card);
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      resize: vertical;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    textarea::placeholder { color: #c0bbb5; }
+
+    textarea:focus {
+      border-color: var(--accent);
+    }
+
+    .char-count {
+      text-align: right;
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 6px;
+      margin-bottom: 24px;
+    }
+
+    button {
+      width: 100%;
+      padding: 15px;
+      background: var(--accent);
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 500;
+      letter-spacing: 0.03em;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+
+    button:hover:not(:disabled) { opacity: 0.88; }
+    button:active:not(:disabled) { transform: scale(0.99); }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .status {
+      margin-top: 20px;
+      padding: 14px 16px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      display: none;
+      line-height: 1.5;
+    }
+
+    .status.ok {
+      background: #eaf2ec;
+      color: #1e5c2f;
+      border: 1px solid #b6d9bc;
+      display: block;
+    }
+
+    .status.err {
+      background: #fdecea;
+      color: #7b1d1d;
+      border: 1px solid #f5c0bc;
+      display: block;
+    }
+
+    .privacy {
+      margin-top: 28px;
+      font-size: 0.78rem;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    .privacy span {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background: var(--muted);
+      border-radius: 50%;
+      vertical-align: middle;
+      margin: 0 6px;
+      opacity: 0.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <i class="icon">✉️</i>
+    <h1>DEJAME UN MENSAJE DE CUMPLEAÑOS </h1>
+    <p class="subtitle">" principalmente criticas, por que las cosas buenas siempre se dice "</p>
+
+    <label for="msg">Tu mensaje</label>
+    <textarea id="msg" placeholder="Escribe aquí tu mensaje..."></textarea>
+    <div class="char-count"><span id="count">0</span> caracteres</div>
+
+    <button id="btn" onclick="enviar()">Enviar mensaje</button>
+
+    <div class="status" id="status"></div>
+
+    <p class="privacy">
+      100% anónimo <span></span> Sin registro <span></span> Sin cookies
+    </p>
+  </div>
+
+  <script>
+    // ⚠️ REEMPLAZA esta URL con la de tu Web App de Apps Script
+    const SCRIPT_URL = "PEGA_AQUÍ_LA_URL_DE_TU_WEB_APP";
+
+    const textarea = document.getElementById("msg");
+    const countEl  = document.getElementById("count");
+    const statusEl = document.getElementById("status");
+    const btn      = document.getElementById("btn");
+
+    textarea.addEventListener("input", () => {
+      countEl.textContent = textarea.value.length;
+    });
+
+    async function enviar() {
+      const texto = textarea.value.trim();
+      if (!texto) return mostrarEstado("Escribe algo antes de enviar.", "err");
+
+      btn.disabled = true;
+      btn.textContent = "Enviando…";
+      statusEl.className = "status";
+
+      try {
+        await fetch(SCRIPT_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ mensaje: texto })
+        });
+        mostrarEstado("✓ Mensaje enviado. Gracias.", "ok");
+        textarea.value = "";
+        countEl.textContent = "0";
+      } catch (e) {
+        mostrarEstado("Error al enviar. Intenta de nuevo.", "err");
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Enviar mensaje";
+      }
+    }
+
+    function mostrarEstado(msg, tipo) {
+      statusEl.textContent = msg;
+      statusEl.className = "status " + tipo;
+    }
+  </script>
+</body>
+</html>
