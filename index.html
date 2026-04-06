@@ -130,13 +130,6 @@
       line-height: 1.5;
     }
 
-    .status.ok {
-      background: #eaf2ec;
-      color: #1e5c2f;
-      border: 1px solid #b6d9bc;
-      display: block;
-    }
-
     .status.err {
       background: #fdecea;
       color: #7b1d1d;
@@ -162,9 +155,79 @@
       margin: 0 6px;
       opacity: 0.5;
     }
+
+    /* ── POPUP ── */
+    .popup-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(26, 24, 20, 0.45);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s;
+      z-index: 100;
+    }
+    .popup-overlay.visible {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .popup-box {
+      background: #fff;
+      border-radius: 12px;
+      padding: 40px 32px;
+      max-width: 320px;
+      width: 90%;
+      text-align: center;
+      transform: translateY(14px);
+      transition: transform 0.25s;
+    }
+    .popup-overlay.visible .popup-box {
+      transform: translateY(0);
+    }
+    .popup-icon { font-size: 2.2rem; margin-bottom: 14px; }
+    .popup-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.4rem;
+      color: var(--ink);
+      margin-bottom: 8px;
+    }
+    .popup-sub {
+      font-size: 0.9rem;
+      color: var(--muted);
+      font-weight: 300;
+      margin-bottom: 28px;
+      line-height: 1.5;
+    }
+    .popup-btn {
+      width: auto;
+      padding: 11px 32px;
+      background: var(--accent);
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 500;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .popup-btn:hover { opacity: 0.88; }
   </style>
 </head>
 <body>
+
+  <!-- POPUP -->
+  <div class="popup-overlay" id="popup">
+    <div class="popup-box">
+      <div class="popup-icon">✉️</div>
+      <div class="popup-title">¡Mensaje recibido!</div>
+      <p class="popup-sub">Gracias por tu sinceridad. Fue enviado de forma 100% anónima.</p>
+      <button class="popup-btn" onclick="cerrarPopup()">Cerrar</button>
+    </div>
+  </div>
+
   <div class="wrapper">
     <i class="icon">✉️</i>
     <h1>DEJAME UN MENSAJE DE CUMPLEAÑOS ANONIMO </h1>
@@ -184,7 +247,6 @@
   </div>
 
   <script>
-    // ⚠️ REEMPLAZA esta URL con la de tu Web App de Apps Script
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxF5ZJdCKCdgy3PXXZmaUSGwuNzyE936t0CoF7oNoyMEZOzLPbbKs9V8LMqBKdIb5oI7A/exec";
 
     const textarea = document.getElementById("msg");
@@ -211,20 +273,29 @@
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ mensaje: texto })
         });
-        mostrarEstado("✓ Mensaje enviado. Gracias.", "ok");
+        // Mostrar popup en vez del mensaje inline
+        abrirPopup();
         textarea.value = "";
         countEl.textContent = "0";
       } catch (e) {
         mostrarEstado("Error al enviar. Intenta de nuevo.", "err");
       } finally {
         btn.disabled = false;
-        btn.textContent = "Enviar mensaje";
+        btn.textContent = "Gacias por tu sinceridad ENVIAR MENSAJE";
       }
     }
 
     function mostrarEstado(msg, tipo) {
       statusEl.textContent = msg;
       statusEl.className = "status " + tipo;
+    }
+
+    function abrirPopup() {
+      document.getElementById("popup").classList.add("visible");
+    }
+
+    function cerrarPopup() {
+      document.getElementById("popup").classList.remove("visible");
     }
   </script>
 </body>
